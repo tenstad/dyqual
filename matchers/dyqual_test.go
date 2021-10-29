@@ -21,20 +21,25 @@ func TestDyqual(t *testing.T) {
 }
 
 var _ = Describe("Dyqual", func() {
-	It("dyffs correctly", func() {
-		a := TestStruct{
-			A: "a",
-			B: "b",
-			C: "c",
-			D: "d",
-			E: "e",
-		}
-		b := TestStruct{
-			A: "a",
-			B: "b",
-			C: "q",
-			D: "d",
-		}
+	a := TestStruct{
+		A: "a",
+		B: "b",
+		C: "c",
+		D: "d",
+		E: "e",
+	}
+	b := TestStruct{
+		A: "a",
+		B: "b",
+		C: "q",
+		D: "d",
+	}
+
+	It("Dyquals correctly", func() {
 		Expect(a).To(Dyqual(b))
+	})
+
+	It("Equals correctly", func() {
+		Expect(a).To(Equal(b))
 	})
 })
