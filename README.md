@@ -1,6 +1,19 @@
 # dyqual
 Gomega Equal with dyff
 
+## Usage
+
+```golang
+import (
+    . "github.com/onsi/gomega"
+    . "github.com/tenstad/dyqual/matchers"
+)
+```
+
+```golang
+Expect(a).To(Dyqual(b))
+```
+
 ## Standad Gomega `Equal()`
 
 ```txt
