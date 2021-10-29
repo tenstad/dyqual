@@ -1,5 +1,5 @@
 # dyqual
-Gomega Equal with dyff
+[Gomega Equal](https://onsi.github.io/gomega/) with [dyff](https://github.com/homeport/dyff)
 
 ## Usage
 
@@ -11,7 +11,7 @@ import (
 ```
 
 ```golang
-Expect(a).To(Dyqual(b))
+Expect(ACTUAL).To(Dyqual(EXPECTED))
 ```
 
 ## Standad Gomega `Equal()`
