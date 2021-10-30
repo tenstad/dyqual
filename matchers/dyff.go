@@ -1,52 +1,53 @@
 package matchers
 
 import (
-	"bytes"
 	"fmt"
+	"reflect"
+	"strings"
 
-	"github.com/gonvenience/ytbx"
-	"github.com/homeport/dyff/pkg/dyff"
+	"github.com/onsi/gomega/types"
 	yamlv3 "gopkg.in/yaml.v3"
 )
 
-func yml(input string) (*yamlv3.Node, error) {
-	docs, err := ytbx.LoadYAMLDocuments([]byte(input))
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse as YAML: %s", err)
-	}
-	if len(docs) > 1 {
-		return nil, fmt.Errorf("failed to use YAML, because it contains multiple documents")
-	}
-
-	return docs[0].Content[0], nil
+type DyffMatcher struct {
+	Expected interface{}
+	Matcher  types.GomegaMatcher
 }
 
-func compare(expected string, actual string) (string, error) {
-	expYML, err := yml(expected)
-	if err != nil {
-		return "", err
+func NewDyffMatcher(expected interface{}, matcher types.GomegaMatcher) types.GomegaMatcher {
+	return DyffMatcher{
+		Expected: expected,
+		Matcher:  matcher,
 	}
-	actYML, err := yml(actual)
-	if err != nil {
-		return "", err
+}
+
+func (m DyffMatcher) Match(actual interface{}) (success bool, err error) {
+	return m.Matcher.Match(actual)
+}
+
+func (m DyffMatcher) NegatedFailureMessage(actual interface{}) (message string) {
+	return m.Matcher.NegatedFailureMessage(actual)
+}
+
+func (m DyffMatcher) FailureMessage(actual interface{}) (message string) {
+	if reflect.TypeOf(m.Expected) != reflect.TypeOf(actual) {
+		return m.Matcher.FailureMessage(actual)
 	}
 
-	report, err := dyff.CompareInputFiles(
-		ytbx.InputFile{Documents: []*yamlv3.Node{expYML}},
-		ytbx.InputFile{Documents: []*yamlv3.Node{actYML}},
-	)
+	exp, err := yamlv3.Marshal(m.Expected)
 	if err != nil {
-		return "", err
+		return m.Matcher.FailureMessage(actual)
 	}
-	humanReport := dyff.HumanReport{
-		Report:     report,
-		OmitHeader: true,
-	}
-
-	buf := bytes.NewBuffer([]byte{})
-	if err := humanReport.WriteReport(buf); err != nil {
-		return "", err
+	act, err := yamlv3.Marshal(actual)
+	if err != nil {
+		return m.Matcher.FailureMessage(actual)
 	}
 
-	return buf.String(), nil
+	diff, err := compare(string(exp), string(act))
+	if err != nil {
+		return m.Matcher.FailureMessage(actual)
+	}
+
+	diff = strings.ReplaceAll(diff, "\n", "\n  ")
+	return fmt.Sprintf("%s not as expected\n  %s", reflect.TypeOf(m.Expected), diff)
 }

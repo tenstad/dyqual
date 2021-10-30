@@ -1,16 +1,11 @@
 package dyqual
 
 import (
-	gomegamatchers "github.com/onsi/gomega/matchers"
+	"github.com/onsi/gomega"
 	"github.com/onsi/gomega/types"
 	"github.com/tenstad/dyqual/matchers"
 )
 
 func Dyqual(expected interface{}) types.GomegaMatcher {
-	return matchers.DyqualMatcher{
-		Expected: expected,
-		Matcher: &gomegamatchers.EqualMatcher{
-			Expected: expected,
-		},
-	}
+	return matchers.NewDyffMatcher(expected, gomega.Equal(expected))
 }
