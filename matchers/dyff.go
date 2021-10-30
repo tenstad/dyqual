@@ -21,14 +21,14 @@ func yml(input string) (*yamlv3.Node, error) {
 	return docs[0].Content[0], nil
 }
 
-func compare(expected string, actual string) (*string, error) {
+func compare(expected string, actual string) (string, error) {
 	expYML, err := yml(expected)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	actYML, err := yml(actual)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	report, err := dyff.CompareInputFiles(
@@ -36,7 +36,7 @@ func compare(expected string, actual string) (*string, error) {
 		ytbx.InputFile{Documents: []*yamlv3.Node{actYML}},
 	)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	humanReport := dyff.HumanReport{
 		Report:     report,
@@ -45,9 +45,8 @@ func compare(expected string, actual string) (*string, error) {
 
 	buf := bytes.NewBuffer([]byte{})
 	if err := humanReport.WriteReport(buf); err != nil {
-		return nil, err
+		return "", err
 	}
-	dyff := buf.String()
 
-	return &dyff, nil
+	return buf.String(), nil
 }
