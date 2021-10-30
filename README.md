@@ -14,9 +14,9 @@ import (
 Expect(ACTUAL).To(Dyqual(EXPECTED))
 ```
 
-## Example error message
+## Example failure message
 
-Comparisons of two `Container`s from `k8s.io/api/core/v1`
+Comparisons of two `Container`s from `k8s.io/api/core/v1`. See [example](./example) folder.
 
 ### `Dyqual`
 
