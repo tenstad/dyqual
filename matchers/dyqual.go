@@ -1,4 +1,4 @@
-package dyqual
+package matchers
 
 import (
 	"fmt"
@@ -6,22 +6,12 @@ import (
 	"strings"
 
 	"github.com/onsi/gomega/matchers"
-	"github.com/onsi/gomega/types"
 	yamlv3 "gopkg.in/yaml.v3"
 )
 
 type DyqualMatcher struct {
 	Expected     interface{}
 	EqualMatcher matchers.EqualMatcher
-}
-
-func Dyqual(expected interface{}) types.GomegaMatcher {
-	return DyqualMatcher{
-		Expected: expected,
-		EqualMatcher: matchers.EqualMatcher{
-			Expected: expected,
-		},
-	}
 }
 
 func (e DyqualMatcher) Match(actual interface{}) (success bool, err error) {

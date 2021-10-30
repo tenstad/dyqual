@@ -1,10 +1,11 @@
-package dyqual
+package example_test
 
 import (
 	"testing"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	. "github.com/tenstad/dyqual/matchers"
 
 	v1 "k8s.io/api/core/v1"
 )

@@ -6,7 +6,7 @@
 ```golang
 import (
     . "github.com/onsi/gomega"
-    . "github.com/tenstad/dyqual/matchers"
+    . "github.com/tenstad/dyqual"
 )
 ```
 

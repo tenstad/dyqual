@@ -1,4 +1,4 @@
-package dyqual
+package matchers
 
 import (
 	"bytes"
