@@ -9,7 +9,7 @@ import (
 func Dyqual(expected interface{}) types.GomegaMatcher {
 	return matchers.DyqualMatcher{
 		Expected: expected,
-		EqualMatcher: gomegamatchers.EqualMatcher{
+		Matcher: &gomegamatchers.EqualMatcher{
 			Expected: expected,
 		},
 	}
