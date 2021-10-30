@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/onsi/gomega"
 	. "github.com/tenstad/dyqual"
 )
 
@@ -13,7 +14,7 @@ type testStruct struct {
 	B string
 }
 
-func TestDyqual(t *testing.T) {
+func TestDyqualStruct(t *testing.T) {
 	assertEquals(t, diff(
 		testStruct{
 			A: "0",
@@ -30,6 +31,15 @@ func TestDyqual(t *testing.T) {
       + 1
   
   `)
+}
+
+func TestDyqualStringInt(t *testing.T) {
+	assertEquals(t, diff(
+		"1",
+		1,
+	),
+		gomega.Equal("1").FailureMessage(1),
+	)
 }
 
 func diff(expected interface{}, actual interface{}) string {
