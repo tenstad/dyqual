@@ -18,8 +18,6 @@ Expect(ACTUAL).To(Dyqual(EXPECTED))
 
 Comparisons of two `Container`s from `k8s.io/api/core/v1`. See [example](./example) folder.
 
-### `Dyqual`
-
 `Dyqual` uses [dyff](https://github.com/homeport/dyff)
 to display the changes between `EXPECTED` and `ACTUAL`.
 
@@ -39,8 +37,6 @@ to display the changes between `EXPECTED` and `ACTUAL`.
           protocol:
           hostip:
 ```
-
-### Gomega `Equal`
 
 [Gomega](https://onsi.github.io/gomega/) `Equal` displays all struct fields,
 regardless of the actual differences.
