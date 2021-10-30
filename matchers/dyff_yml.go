@@ -9,8 +9,13 @@ import (
 	yamlv3 "gopkg.in/yaml.v3"
 )
 
-func ymlNodes(input string) ([]*yamlv3.Node, error) {
-	docs, err := ytbx.LoadYAMLDocuments([]byte(input))
+func ymlNodes(input interface{}) ([]*yamlv3.Node, error) {
+	yml, err := yamlv3.Marshal(input)
+	if err != nil {
+		return nil, err
+	}
+
+	docs, err := ytbx.LoadYAMLDocuments(yml)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse as YAML: %s", err)
 	}
@@ -19,27 +24,18 @@ func ymlNodes(input string) ([]*yamlv3.Node, error) {
 }
 
 func compare(expected interface{}, actual interface{}) (string, error) {
-	expYML, err := yamlv3.Marshal(expected)
+	expectedNodes, err := ymlNodes(expected)
 	if err != nil {
 		return "", err
 	}
-	actYML, err := yamlv3.Marshal(actual)
-	if err != nil {
-		return "", err
-	}
-
-	expNodes, err := ymlNodes(string(expYML))
-	if err != nil {
-		return "", err
-	}
-	actNodes, err := ymlNodes(string(actYML))
+	actualNodes, err := ymlNodes(actual)
 	if err != nil {
 		return "", err
 	}
 
 	report, err := dyff.CompareInputFiles(
-		ytbx.InputFile{Documents: expNodes},
-		ytbx.InputFile{Documents: actNodes},
+		ytbx.InputFile{Documents: expectedNodes},
+		ytbx.InputFile{Documents: actualNodes},
 	)
 	if err != nil {
 		return "", err
