@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/onsi/gomega/types"
-	yamlv3 "gopkg.in/yaml.v3"
 )
 
 type DyffMatcher struct {
@@ -34,16 +33,7 @@ func (m DyffMatcher) FailureMessage(actual interface{}) (message string) {
 		return m.Matcher.FailureMessage(actual)
 	}
 
-	exp, err := yamlv3.Marshal(m.Expected)
-	if err != nil {
-		return m.Matcher.FailureMessage(actual)
-	}
-	act, err := yamlv3.Marshal(actual)
-	if err != nil {
-		return m.Matcher.FailureMessage(actual)
-	}
-
-	diff, err := compare(string(exp), string(act))
+	diff, err := compare(m.Expected, actual)
 	if err != nil {
 		return m.Matcher.FailureMessage(actual)
 	}

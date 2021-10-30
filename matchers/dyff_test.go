@@ -14,29 +14,29 @@ type testStruct struct {
 }
 
 func TestDyqual(t *testing.T) {
-	expected := testStruct{
-		A: "0",
-		B: "1",
-	}
-	actual := testStruct{
-		A: "0",
-	}
-	matcher := Dyqual(expected)
-	diff := matcher.FailureMessage(actual)
-
-	assertEquals(t,
+	assertEquals(t, diff(
+		testStruct{
+			A: "0",
+		},
+		testStruct{
+			A: "1",
+		},
+	),
 		`matchers_test.testStruct not as expected
   
-  b
+  a
     ± value change
-      - 1
-      +
+      - 0
+      + 1
   
-  `,
-		diff)
+  `)
 }
 
-func assertEquals(t *testing.T, expected string, actual string) {
+func diff(expected interface{}, actual interface{}) string {
+	return Dyqual(expected).FailureMessage(actual)
+}
+
+func assertEquals(t *testing.T, actual string, expected string) {
 	if expected != actual {
 		t.Fatal(failureMessage(expected, actual))
 	}
